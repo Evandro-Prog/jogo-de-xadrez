@@ -140,6 +140,21 @@ namespace xadrez
                 throw new TabuleiroException("Você não pode se colocar em xeque!");
             }
 
+            Peca p = tab.peca(destino);
+
+            //jogadaespscial promoção
+            if (p is Peao)
+            {
+                if ((p.cor == Cor.Branca && destino.linha == 0) || (p.cor == Cor.Preta && destino.linha == 7))
+                {
+                    p = tab.retirarPeca(destino);
+                    pecas.Remove(p);
+                    Peca dama = new Dama(tab, p.cor);
+                    tab.colocarPeca(dama, destino);
+                    pecas.Add(dama);
+                }
+            }
+
             if (estaEmXeque(adversaria(jogadorAtual)))
             {
                 xeque = true;
@@ -156,10 +171,7 @@ namespace xadrez
             {
                 turno++;
                 mudaJogador();
-            }
-
-
-            Peca p = tab.peca(destino);
+            }           
 
             //#jogadaEspecial en passant
             if (p is Peao && (destino.linha == origem.linha -2 || destino.linha == origem.linha + 2))
@@ -337,9 +349,7 @@ namespace xadrez
             colocarNovaPeca('h', 2, new Peao(tab, Cor.Branca, this));
 
 
-            colocarNovaPeca('a', 8, new Torre(tab, Cor.Preta));
-            colocarNovaPeca('b', 8, new Cavalo(tab, Cor.Preta)); 
-            colocarNovaPeca('c', 8, new Bispo(tab, Cor.Preta));
+            
             colocarNovaPeca('d', 8, new Dama(tab, Cor.Preta));
             colocarNovaPeca('e', 8, new Rei(tab, Cor.Preta, this)); 
             colocarNovaPeca('f', 8, new Bispo(tab, Cor.Preta));
@@ -353,11 +363,6 @@ namespace xadrez
             colocarNovaPeca('f', 7, new Peao(tab, Cor.Preta, this));
             colocarNovaPeca('g', 7, new Peao(tab, Cor.Preta, this));
             colocarNovaPeca('h', 7, new Peao(tab, Cor.Preta, this));
-        }
-
-        private void colocarNovaPeca(char v, Torre torre)
-        {
-            throw new NotImplementedException();
-        }
+        }        
     }
 }
